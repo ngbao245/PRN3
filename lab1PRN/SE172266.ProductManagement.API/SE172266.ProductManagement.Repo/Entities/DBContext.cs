@@ -43,7 +43,7 @@ namespace SE172266.ProductManagement.Repo.Entities
         {
             var connectString = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("C:\\Users\\BiBo\\Desktop\\lab1PRN\\SE172266.ProductManagement.API\\SE172266.ProductManagement.API\\appsettings.json")
+                    .AddJsonFile("appsettings.json")
                     .Build();
             optionsBuilder.UseSqlServer(connectString.GetConnectionString("MyStoreDB"));
         }
