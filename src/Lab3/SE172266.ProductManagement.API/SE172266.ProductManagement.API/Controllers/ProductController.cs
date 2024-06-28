@@ -127,6 +127,7 @@ namespace SE172266.ProductManagement.API.Controllers
             _unitOfWork.ProductRepository.Insert(productEntity);
             _unitOfWork.SaveChange();
             return CreatedAtAction(nameof(GetProductById), new { id = productEntity.ProductId }, new { Message = "Product created successfully", Product = productEntity });
+            //return new ObjectResult(productEntity) { StatusCode = 201 };
         }
 
         [HttpPut("{id}")]

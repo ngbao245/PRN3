@@ -102,6 +102,7 @@ namespace SE172266.ProductManagement.API.Middleware
             return statusCode switch
             {
                 StatusCodes.Status200OK => "OK",
+                StatusCodes.Status201Created => "Created",
                 StatusCodes.Status400BadRequest => "Bad Request",
                 StatusCodes.Status401Unauthorized => "Unauthorized",
                 StatusCodes.Status404NotFound => "Not Found",
