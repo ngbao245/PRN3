@@ -1,0 +1,3662 @@
+{
+	"info": {
+		"_postman_id": "4ccf89e5-dd51-46e7-84f0-fd651de7c1c1",
+		"name": "Lab3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28012459"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "TC0101 - Register_ValidAccount_Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Function to generate a random string\r",
+									"function generateRandomString(length) {\r",
+									"    var result = '';\r",
+									"    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r",
+									"    var charactersLength = characters.length;\r",
+									"    for (var i = 0; i < length; i++) {\r",
+									"        result += characters.charAt(Math.floor(Math.random() * charactersLength));\r",
+									"    }\r",
+									"    return result;\r",
+									"}\r",
+									"\r",
+									"// Generate a random email\r",
+									"var randomString = generateRandomString(8); \r",
+									"var email = `test.${randomString}@example.com`; \r",
+									"\r",
+									"// Set environment variables\r",
+									"pm.environment.set(\"email\", email);\r",
+									"pm.environment.set(\"password\", \"yourPasswordHere\"); \r",
+									"\r",
+									"// Prepare request body for registration\r",
+									"pm.request.body = {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify({ email: email, password: pm.environment.get(\"password\") })\r",
+									"};\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains user ID\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.data).to.have.property(\"user-id\");\r",
+									"    pm.environment.set(\"userId\", jsonData.id);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}\n",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/account/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"account",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/account/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"account",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0102 - SetRole_ValidAccount_Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Fetch email from environment variables\r",
+									"var email = pm.environment.get(\"email\");\r",
+									"\r",
+									"// Validate email variable\r",
+									"if (!email) {\r",
+									"    console.error(\"Email is missing from environment variables.\");\r",
+									"    // Handle the error condition appropriately\r",
+									"}\r",
+									"\r",
+									"// Prepare request body for setting role to \"Admin\"\r",
+									"pm.request.body = {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify({ email: email, role: \"Admin\" })\r",
+									"};\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"{{userId}}\",\n    \"role\": \"Admin\"\n}\n",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/account/assign-role",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"account",
+								"assign-role"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"<string>\",\n  \"role\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/account/assign-role",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"account",
+										"assign-role"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0103 - Login_ValidAccount_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains user ID\", function () {\r",
+									"    pm.expect(jsonData.data).to.have.property(\"user-id\");\r",
+									"    pm.environment.set(\"userId\", jsonData.data[\"user-id\"]);\r",
+									"});\r",
+									"\r",
+									"// Function to extract cookie value by name\r",
+									"function getCookieValue(cookieString, name) {\r",
+									"    const match = cookieString.match(new RegExp('(^|; )' + name + '=([^;]*)'));\r",
+									"    if (match) {\r",
+									"        return match[2];\r",
+									"    }\r",
+									"    return null;\r",
+									"}\r",
+									"\r",
+									"const cookieHeader = pm.response.headers.get('Set-Cookie');\r",
+									"const accessToken = getCookieValue(cookieHeader, '.AspNetCore.Identity.Application');\r",
+									"if (accessToken) {\r",
+									"    pm.environment.set('accessToken', accessToken);\r",
+									"} else {\r",
+									"    console.error('Access token not found in cookie.');\r",
+									"    // You can handle this error condition as needed\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Fetch email and password from environment variables\r",
+									"var email = pm.environment.get(\"email\");\r",
+									"var password = pm.environment.get(\"password\");\r",
+									"\r",
+									"// Validate email and password variables\r",
+									"if (!email || !password) {\r",
+									"    console.error(\"Email or password is missing from environment variables.\");\r",
+									"    // Handle the error condition appropriately\r",
+									"}\r",
+									"\r",
+									"// Prepare request body for login\r",
+									"pm.request.body = {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify({ email: email, password: password })\r",
+									"};\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"remember-me\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/account/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"account",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"<string>\",\n  \"password\": \"<string>\",\n  \"remember-me\": \"<boolean>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/account/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"account",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get Product By Id",
+			"item": [
+				{
+					"name": "TC0201 - GetProductByProductId_ValidValue_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check response status code\r",
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(jsonData.statusCode).to.equal(200); // Verify status code is 200\r",
+									"});\r",
+									"\r",
+									"// Validate response schema\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA'))); // Validate JSON schema\r",
+									"});\r",
+									"// Check product details in response\r",
+									"pm.test(\"Response contains the correct product details\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']).to.equal(1); \r",
+									"    pm.expect(jsonData.data['product-name']).to.equal(\"Pizza\"); \r",
+									"    pm.expect(jsonData.data['category-id']).to.equal(1);\r",
+									"    pm.expect(jsonData.data['units-in-stock']).to.equal(1); \r",
+									"    pm.expect(jsonData.data['unit-price']).to.equal(5.00); \r",
+									"    pm.expect(jsonData.data['is-deleted']).to.equal(false);\r",
+									"    pm.expect(jsonData.data['deleted-at']).to.equal(null);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']); \r",
+									"    pm.expect(jsonData.data['product-name']); \r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']); \r",
+									"    pm.expect(jsonData.data['unit-price']); \r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check message in response\r",
+									"pm.test(\"Response contains the correct message\", function () {\r",
+									"    pm.expect(jsonData.message).to.equal(\"OK\"); // Verify message is correct\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0202 - GetProductByProductId_InvalidValue_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 404\r",
+									"pm.test(\"Invalid product ID format\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields for a 400 status code\r",
+									"pm.test(\"Check response fields for invalid product ID\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"// Since the status code is 400, there should be no data object with product details\r",
+									"// Assuming jsonData is already defined as pm.response.json() in your test script\r",
+									"\r",
+									"pm.test(\"Data should contain error information for non-existent product ID\", function () {\r",
+									"    pm.expect(jsonData.data).to.have.property(\"errors\");\r",
+									"    pm.expect(jsonData.data.errors[0].message).to.eql(\"Product with id -1 not found.\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0203 - GetProductByProductId_InvalidValueType_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_TYPE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"type\");\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"traceId\");\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"// Check error message\r",
+									"pm.test(\"Error message is correct\", function () {\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.errors.id[0]).to.eql(\"The value 'aaaaa' is not valid.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "aaaaa",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Get Product List",
+			"item": [
+				{
+					"name": "TC0204 - GetProductList_NoFilter_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'OK'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data is an array and has 50 products\", function () {\r",
+									"    pm.expect(jsonData.data.entities).to.be.an('array').with.lengthOf(50);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains pagination information\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData.data).to.have.property('page-index').to.eql(1);\r",
+									"    pm.expect(jsonData.data).to.have.property('page-size').to.eql(50);\r",
+									"    pm.expect(jsonData.data).to.have.property('total-pages');\r",
+									"    pm.expect(jsonData.data).to.have.property('total-products');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']);\r",
+									"    pm.expect(jsonData.data['product-name']);\r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']);\r",
+									"    pm.expect(jsonData.data['unit-price']);\r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check product details\r",
+									"pm.test(\"Check details of first item\", function () {\r",
+									"    var entities = jsonData.data[\"entities\"];\r",
+									"    pm.expect(entities).to.be.an(\"array\");\r",
+									"    pm.expect(entities.length).to.eql(50);\r",
+									"\r",
+									"    // Check details of first item\r",
+									"    var firstItem = entities[0];\r",
+									"    pm.expect(firstItem[\"product-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"product-name\"]).to.eql(\"Pizza\");\r",
+									"    pm.expect(firstItem[\"category-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"units-in-stock\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"unit-price\"]).to.eql(5.00);\r",
+									"    pm.expect(firstItem[\"is-deleted\"]).to.equal(false);\r",
+									"    pm.expect(firstItem[\"deleted-at\"]).to.equal(null);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "CategoryId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageIndex",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0205 - GetProductList_Pagelndex0_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'OK'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data is an array and has 50 products\", function () {\r",
+									"    pm.expect(jsonData.data.entities).to.be.an('array').with.lengthOf(50);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains pagination information\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData.data).to.have.property('page-index').to.eql(1);\r",
+									"    pm.expect(jsonData.data).to.have.property('page-size').to.eql(50);\r",
+									"    pm.expect(jsonData.data).to.have.property('total-pages');\r",
+									"    pm.expect(jsonData.data).to.have.property('total-products');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']); \r",
+									"    pm.expect(jsonData.data['product-name']); \r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']); \r",
+									"    pm.expect(jsonData.data['unit-price']); \r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check product details\r",
+									"pm.test(\"Check details of first item\", function () {\r",
+									"    var entities = jsonData.data[\"entities\"];\r",
+									"    pm.expect(entities).to.be.an(\"array\");\r",
+									"    pm.expect(entities.length).to.eql(50); \r",
+									"\r",
+									"    // Check details of first item\r",
+									"    var firstItem = entities[0];\r",
+									"    pm.expect(firstItem[\"product-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"product-name\"]).to.eql(\"Pizza\");\r",
+									"    pm.expect(firstItem[\"category-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"units-in-stock\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"unit-price\"]).to.eql(5.00);\r",
+									"    pm.expect(firstItem[\"is-deleted\"]).to.eql(false);\r",
+									"    pm.expect(firstItem[\"deleted-at\"]).to.eql(null);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product?pageIndex=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "CategoryId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "pageIndex",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0206 - GetProductList_Pagelndex1_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'OK'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data is an array and has 50 products\", function () {\r",
+									"    pm.expect(jsonData.data.entities).to.be.an('array').with.lengthOf(50);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains pagination information\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData.data).to.have.property('page-index').to.eql(1);\r",
+									"    pm.expect(jsonData.data).to.have.property('page-size').to.eql(50);\r",
+									"    pm.expect(jsonData.data).to.have.property('total-pages');\r",
+									"    pm.expect(jsonData.data).to.have.property('total-products');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']);\r",
+									"    pm.expect(jsonData.data['product-name']);\r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']);\r",
+									"    pm.expect(jsonData.data['unit-price']);\r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check product details\r",
+									"pm.test(\"Check details of first item\", function () {\r",
+									"    var entities = jsonData.data[\"entities\"];\r",
+									"    pm.expect(entities).to.be.an(\"array\");\r",
+									"    pm.expect(entities.length).to.eql(50);\r",
+									"\r",
+									"    // Check details of first item\r",
+									"    var firstItem = entities[0];\r",
+									"    pm.expect(firstItem[\"product-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"product-name\"]).to.eql(\"Pizza\");\r",
+									"    pm.expect(firstItem[\"category-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"units-in-stock\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"unit-price\"]).to.eql(5.00); \r",
+									"    pm.expect(firstItem[\"is-deleted\"]).to.eql(false);\r",
+									"    pm.expect(firstItem[\"deleted-at\"]).to.eql(null);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product?pageIndex=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "CategoryId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "7",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageIndex",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0207 - GetProductList_SortByPriceAscending_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'OK'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data is an array and has 50 products\", function () {\r",
+									"    pm.expect(jsonData.data.entities).to.be.an('array').with.lengthOf(50);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains pagination information\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData.data).to.have.property('page-index').to.eql(1);\r",
+									"    pm.expect(jsonData.data).to.have.property('page-size').to.eql(50);\r",
+									"    pm.expect(jsonData.data).to.have.property('total-pages');\r",
+									"    pm.expect(jsonData.data).to.have.property('total-products');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']); \r",
+									"    pm.expect(jsonData.data['product-name']); \r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']); \r",
+									"    pm.expect(jsonData.data['unit-price']); \r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check if the response is sorted by price in ascending order\r",
+									"pm.test(\"Response is sorted by price in ascending order\", function () {\r",
+									"    var previousPrice = 0;\r",
+									"    jsonData.data.entities.forEach(function (product) {\r",
+									"        var unitPrice = product[\"unit-price\"];\r",
+									"        pm.expect(unitPrice).to.be.at.least(previousPrice);\r",
+									"        previousPrice = unitPrice;\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product?SortContent.sortProductBy=5&SortContent.sortProductType=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "CategoryId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "5"
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "1"
+								},
+								{
+									"key": "pageIndex",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0208 - GetProducList_SortByPriceDescending_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'OK'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data is an array and has 50 products\", function () {\r",
+									"    pm.expect(jsonData.data.entities).to.be.an('array').with.lengthOf(50);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains pagination information\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData.data).to.have.property('page-index').to.eql(1);\r",
+									"    pm.expect(jsonData.data).to.have.property('page-size').to.eql(50);\r",
+									"    pm.expect(jsonData.data).to.have.property('total-pages');\r",
+									"    pm.expect(jsonData.data).to.have.property('total-products');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']); \r",
+									"    pm.expect(jsonData.data['product-name']); \r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']); \r",
+									"    pm.expect(jsonData.data['unit-price']); \r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check if the response is sorted by price in descending order\r",
+									"pm.test(\"Response is sorted by price in descending order\", function () {\r",
+									"    var previousPrice = Number.MAX_SAFE_INTEGER;\r",
+									"    jsonData.data.entities.forEach(function (product) {\r",
+									"        var unitPrice = product[\"unit-price\"];\r",
+									"        pm.expect(unitPrice).to.be.at.most(previousPrice);\r",
+									"        previousPrice = unitPrice;\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product?SortContent.sortProductBy=5&SortContent.sortProductType=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "CategoryId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "5"
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "2"
+								},
+								{
+									"key": "pageIndex",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0209 - GetProductList_ValidProductName_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'OK'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data is an array and has 1 products\", function () {\r",
+									"    pm.expect(jsonData.data.entities).to.be.an('array').with.lengthOf(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains pagination information\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData.data).to.have.property('page-index').to.eql(1);\r",
+									"    pm.expect(jsonData.data).to.have.property('page-size').to.eql(50);\r",
+									"    pm.expect(jsonData.data).to.have.property('total-pages');\r",
+									"    pm.expect(jsonData.data).to.have.property('total-products');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']);\r",
+									"    pm.expect(jsonData.data['product-name']);\r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']);\r",
+									"    pm.expect(jsonData.data['unit-price']);\r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check product details\r",
+									"pm.test(\"Check details of first item\", function () {\r",
+									"    var entities = jsonData.data[\"entities\"];\r",
+									"    pm.expect(entities).to.be.an(\"array\");\r",
+									"    pm.expect(entities.length).to.eql(1);\r",
+									"\r",
+									"    // Check details of first item\r",
+									"    var firstItem = entities[0];\r",
+									"    pm.expect(firstItem[\"product-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"product-name\"]).to.eql(\"Pizza\");\r",
+									"    pm.expect(firstItem[\"category-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"units-in-stock\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"unit-price\"]).to.eql(5.00);\r",
+									"    pm.expect(firstItem[\"is-deleted\"]).to.eql(false);\r",
+									"    pm.expect(firstItem[\"deleted-at\"]).to.eql(null);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product?ProductName=Pizza",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "Pizza"
+								},
+								{
+									"key": "CategoryId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageIndex",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0210 - GetProdyctList_ValidMinMaxPrice_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'OK'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"OK\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data is an array and has products\", function () {\r",
+									"    pm.expect(jsonData.data.entities).to.be.an('array').with.not.lengthOf(0);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains pagination information\", function () {\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData.data).to.have.property('page-index').to.eql(1);\r",
+									"    pm.expect(jsonData.data).to.have.property('page-size').to.eql(50);\r",
+									"    pm.expect(jsonData.data).to.have.property('total-pages');\r",
+									"    pm.expect(jsonData.data).to.have.property('total-products');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data['product-id']);\r",
+									"    pm.expect(jsonData.data['product-name']);\r",
+									"    pm.expect(jsonData.data['category-id']);\r",
+									"    pm.expect(jsonData.data['units-in-stock']);\r",
+									"    pm.expect(jsonData.data['unit-price']);\r",
+									"    pm.expect(jsonData.data['is-deleted']);\r",
+									"    pm.expect(jsonData.data['deleted-at']);\r",
+									"});\r",
+									"\r",
+									"// Check product details\r",
+									"pm.test(\"Check details of first item\", function () {\r",
+									"    var entities = jsonData.data[\"entities\"];\r",
+									"    pm.expect(entities).to.be.an(\"array\");\r",
+									"\r",
+									"    // Check details of first item\r",
+									"    var firstItem = entities[0];\r",
+									"    pm.expect(firstItem[\"product-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"product-name\"]).to.eql(\"Pizza\");\r",
+									"    pm.expect(firstItem[\"category-id\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"units-in-stock\"]).to.eql(1);\r",
+									"    pm.expect(firstItem[\"unit-price\"]).to.eql(5.00);\r",
+									"    pm.expect(firstItem[\"is-deleted\"]).to.eql(false);\r",
+									"    pm.expect(firstItem[\"deleted-at\"]).to.eql(null);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product?FromUnitPrice=5&ToUnitPrice=20",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "Sushi",
+									"disabled": true
+								},
+								{
+									"key": "CategoryId",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "5"
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "20"
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pageIndex",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0211 - GetProductList_PageSize300Pagelndex0_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check if status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_TYPE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"type\");\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"traceId\");\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"pageSize\");\r",
+									"});\r",
+									"\r",
+									"// Check error message\r",
+									"pm.test(\"Error message is correct\", function () {\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"pageSize\");\r",
+									"    pm.expect(jsonData.errors.pageSize[0]).to.eql(\"The field pageSize must be between 1 and 200.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product?pageIndex=0&pageSize=300",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "ProductName",
+									"value": "\"\"",
+									"disabled": true
+								},
+								{
+									"key": "CategoryId",
+									"value": "\"\"",
+									"disabled": true
+								},
+								{
+									"key": "FromUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ToUnitPrice",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "SortContent.sortProductType",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "pageIndex",
+									"value": "0"
+								},
+								{
+									"key": "pageSize",
+									"value": "300"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product?ProductName=<string>&CategoryId=<integer>&FromUnitPrice=<double>&ToUnitPrice=<double>&SortContent.sortProductBy=1&SortContent.sortProductType=1&pageIndex=<integer>&pageSize=<integer>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									],
+									"query": [
+										{
+											"key": "ProductName",
+											"value": "<string>"
+										},
+										{
+											"key": "CategoryId",
+											"value": "<integer>"
+										},
+										{
+											"key": "FromUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "ToUnitPrice",
+											"value": "<double>"
+										},
+										{
+											"key": "SortContent.sortProductBy",
+											"value": "1"
+										},
+										{
+											"key": "SortContent.sortProductType",
+											"value": "1"
+										},
+										{
+											"key": "pageIndex",
+											"value": "<integer>"
+										},
+										{
+											"key": "pageSize",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Create Product",
+			"item": [
+				{
+					"name": "TC0212 - CreateProduct_ValidCredentials_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"var productId = pm.environment.get('product-id'); // Get product-id from environment",
+									"// Check status code",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201); // Verify status code is 200",
+									"});",
+									"",
+									"// Check JSON schema",
+									"pm.test('Schema validation', () => {",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));",
+									"});",
+									"",
+									"// Check message in response",
+									"pm.test(\"Message is 'Product created successfully'\", function () {",
+									"    pm.expect(jsonData.data.message).to.eql(\"Product created successfully\");",
+									"});",
+									"",
+									"pm.test(\"Response contains the correct product fields\", function () {",
+									"    pm.expect(jsonData.data.product).to.have.property('product-id');",
+									"    pm.expect(jsonData.data.product).to.have.property('category-id');",
+									"    pm.expect(jsonData.data.product).to.have.property('product-name');",
+									"    pm.expect(jsonData.data.product).to.have.property('unit-price');",
+									"    pm.expect(jsonData.data.product).to.have.property('units-in-stock');",
+									"    pm.expect(jsonData.data.product).to.have.property('is-deleted');",
+									"    pm.expect(jsonData.data.product).to.have.property('deleted-at');",
+									"});",
+									"",
+									"// Check data in response",
+									"pm.test(\"Response has correct result object\", function () {",
+									"    pm.expect(jsonData.data.product).to.have.property('product-id');",
+									"    pm.expect(jsonData.data.product).to.have.property('category-id', 1);",
+									"    pm.expect(jsonData.data.product).to.have.property('product-name', 'New Product');",
+									"    pm.expect(jsonData.data.product).to.have.property('unit-price', 15.99);",
+									"    pm.expect(jsonData.data.product).to.have.property('units-in-stock', 10);",
+									"    pm.expect(jsonData.data.product).to.have.property('is-deleted', false);",
+									"    pm.expect(jsonData.data.product).to.have.property('deleted-at', null);",
+									"});",
+									"",
+									"// // Save product details to environment variables",
+									"pm.environment.set('product-id', jsonData.data.product['product-id']); "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"New Product\",\n  \"category-id\": 1,\n  \"units-in-stock\": 10,\n  \"unit-price\": 15.99\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0213 - CreateProduct_CreateMissingField_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Check status code\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201); // Verify status code is 200\r",
+									"});\r",
+									"\r",
+									"// Check JSON schema\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check message in response\r",
+									"pm.test(\"Message is 'Product created successfully'\", function () {\r",
+									"    pm.expect(jsonData.data.message).to.eql(\"Product created successfully\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-id');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('category-id');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-name');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('unit-price');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('units-in-stock');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('is-deleted');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('deleted-at');\r",
+									"});\r",
+									"\r",
+									"// Check data in response\r",
+									"pm.test(\"Response has correct result object\", function () {\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-id');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('category-id', 1);\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-name', 'New Product');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('unit-price', 0);\r",
+									"    pm.expect(jsonData.data.product).to.have.property('units-in-stock', 0);\r",
+									"    pm.expect(jsonData.data.product).to.have.property('is-deleted', false);\r",
+									"    pm.expect(jsonData.data.product).to.have.property('deleted-at', null);\r",
+									"});\r",
+									"\r",
+									"// // Save product details to environment variables\r",
+									"pm.environment.set('product-id', jsonData.data.product['product-id']); "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"New Product\",\n  \"category-id\": 1\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0214 - CreateProduct_InvalidCategoryld_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Invalid product ID format\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields for a 400 status code\r",
+									"pm.test(\"Check response fields for invalid product ID\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"// Ensure message is 'Invalid product ID'\r",
+									"pm.test(\"Message is 'Bad Request'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"Bad Request\");\r",
+									"});\r",
+									"\r",
+									"// Since the status code is 400, there should be no data object with product details\r",
+									"// Assuming jsonData is already defined as pm.response.json() in your test script\r",
+									"\r",
+									"pm.test(\"Data should contain error information for non-existent product ID\", function () {\r",
+									"    pm.expect(jsonData.data).to.have.property(\"errors\");\r",
+									"    pm.expect(jsonData.data.errors[0].message).to.eql(\"Invalid category ID\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"New Product\",\n  \"category-id\": 1111,\n  \"units-in-stock\": 10,\n  \"unit-price\": 15.99\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0215 - CreateProduct_InvalidCategoryld_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Invalid product ID format\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_TYPE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"type\");\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"traceId\");\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"// Check error message\r",
+									"pm.test(\"Error message is correct\", function () {\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"UnitPrice\");\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"UnitsInStock\");\r",
+									"    pm.expect(jsonData.errors.UnitPrice[0]).to.eql(\"The field UnitPrice must be between 0 and 2147483647.\");\r",
+									"    pm.expect(jsonData.errors.UnitsInStock[0]).to.eql(\"The field UnitsInStock must be between 0 and 2147483647.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"\",\n  \"category-id\": 1,\n  \"units-in-stock\": -10,\n  \"unit-price\": -10\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Update Product",
+			"item": [
+				{
+					"name": "TC0216 - UpdateProduct_ValidCredentials_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var productId = pm.environment.get('product-id'); // Get product-id from environment\r",
+									"\r",
+									"// Check status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200); // Verify status code is 200 (OK)\r",
+									"});\r",
+									"\r",
+									"// Validate response schema\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA'))); //Validate JSON schema\r",
+									"});\r",
+									"\r",
+									"// Check success message in response\r",
+									"pm.test(\"Response contains expected values\", function () {\r",
+									"    pm.expect(jsonData.data).to.have.property('message', \"Product updated successfully\"); // Verify success message\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-id');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('category-id');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-name');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('unit-price');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('units-in-stock');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('is-deleted');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('deleted-at');\r",
+									"});\r",
+									"\r",
+									"// Check updated product details in response\r",
+									"pm.test(\"Response contains expected values\", function () {\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"product-id\", productId); // Verify product name\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"product-name\", \"Updated Product\"); // Verify product name\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"category-id\", 2); // Verify category ID\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"units-in-stock\", 15); // Verify units in stock\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"unit-price\", 19.99); // Verify unit price\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"is-deleted\", false); \r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"deleted-at\", null); \r",
+									"});\r",
+									"pm.environment.set('product-id', jsonData.data.product['product-id']); "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"Updated Product\",\n  \"category-id\": \"2\",\n  \"units-in-stock\": \"15\",\n  \"unit-price\": \"19.99\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product-id}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0217 - UpdateProduct_UpdateMissingField_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var productId = pm.environment.get('product-id'); // Get product-id from environment\r",
+									"\r",
+									"// Check status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200); // Verify status code is 200 (OK)\r",
+									"});\r",
+									"\r",
+									"// Validate response schema\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA'))); //Validate JSON schema\r",
+									"});\r",
+									"\r",
+									"// Check success message in response\r",
+									"pm.test(\"Response contains expected values\", function () {\r",
+									"    pm.expect(jsonData.data).to.have.property('message', \"Product updated successfully\"); // Verify success message\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains the correct product fields\", function () {\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-id');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('category-id');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('product-name');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('unit-price');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('units-in-stock');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('is-deleted');\r",
+									"    pm.expect(jsonData.data.product).to.have.property('deleted-at');\r",
+									"});\r",
+									"\r",
+									"// Check updated product details in response\r",
+									"pm.test(\"Response contains expected values\", function () {\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"product-id\", productId); // Verify product name\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"product-name\", \"Updated Product\"); // Verify product name\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"category-id\", 2); // Verify category ID\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"units-in-stock\", 15); // Verify units in stock\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"unit-price\", 19.99); // Verify unit price\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"is-deleted\", false);\r",
+									"    pm.expect(jsonData.data.product).to.have.property(\"deleted-at\", null);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"Updated Product\",\n  \"category-id\": \"2\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product-id}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0218 - UpdateProduct_NotExistedld_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Invalid product ID format\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields for a 400 status code\r",
+									"pm.test(\"Check response fields for invalid product ID\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData).to.have.property(\"data\");\r",
+									"});\r",
+									"\r",
+									"// Ensure message is 'Invalid product ID'\r",
+									"pm.test(\"Message is 'Bad Request'\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(\"Not Found\");\r",
+									"});\r",
+									"\r",
+									"// Since the status code is 400, there should be no data object with product details\r",
+									"// Assuming jsonData is already defined as pm.response.json() in your test script\r",
+									"\r",
+									"pm.test(\"Data should contain error information for non-existent product ID\", function () {\r",
+									"    pm.expect(jsonData.data).to.have.property(\"errors\");\r",
+									"    pm.expect(jsonData.data.errors[0].message).to.eql(\"Product with id 99999 not found.\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"Updated Product\",\n  \"category-id\": \"2\",\n  \"units-in-stock\": \"15\",\n  \"unit-price\": \"19.99\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "99999",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0219 - UpdateProduct_InvalidPriceAndQuantity_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Invalid product ID format\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_TYPE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"type\");\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"traceId\");\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"// Check error message\r",
+									"pm.test(\"Error message is correct\", function () {\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"UnitPrice\");\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"UnitsInStock\");\r",
+									"    pm.expect(jsonData.errors.UnitPrice[0]).to.eql(\"The field UnitPrice must be between 0 and 2147483647.\");\r",
+									"    pm.expect(jsonData.errors.UnitsInStock[0]).to.eql(\"The field UnitsInStock must be between 0 and 2147483647.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product-name\": \"Updated Product\",\n  \"category-id\": \"2\",\n  \"units-in-stock\": \"-1\",\n  \"unit-price\": \"-1\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product-id}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product-name\": \"<string>\",\n  \"category-id\": \"<integer>\",\n  \"units-in-stock\": \"<integer>\",\n  \"unit-price\": \"<double>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Delete Product",
+			"item": [
+				{
+					"name": "TC0220 - DeleteProduct_ValidCredentials_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var deletedProductId = pm.environment.get('product-id');\r",
+									"\r",
+									"// Validate response schema\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA'))); // Validate JSON schema\r",
+									"});\r",
+									"\r",
+									"// Check status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200); // Verify status code is 200 (0K)\r",
+									"});\r",
+									"\r",
+									"// Check success message in response\r",
+									"pm.test(\"Response contains the correct message\", function () {\r",
+									"    pm.expect(jsonData.data.message).to.equal(\"Product deleted successfully\"); // Verify success message\r",
+									"});\r",
+									"\r",
+									"// Send a GET request to verify the product no longer exists\r",
+									"pm.sendRequest({\r",
+									"    url: pm.environment.get('baseUrl') + '/products/' + pm.environment.get('product-id'),\r",
+									"    method: 'GET'\r",
+									"}, function (err, res) {\r",
+									"    // Check that the GET request returns a 404 status code\r",
+									"    pm.test(\"Product is deleted\", function () {\r",
+									"        pm.expect(res).to.have.property('code', 404); // Verify status code is 404 (Not Found)\r",
+									"        pm.expect(res).to.have.property('status', \"Not Found\"); // Verify status code is Not Found\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product-id}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0221 - DeleteProduct_NotExistedld_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var productId = pm.environment.get('product-id'); // Get product-id from environment\r",
+									"\r",
+									"// Validate response schema\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('PRODUCT_SCHEMA'))); // Validate JSON schema\r",
+									"});\r",
+									"\r",
+									"// Check status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(404); // Verify status code is 200 (0K)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Check success message in response\r",
+									"pm.test(\"Response contains the correct message\", function () {\r",
+									"    pm.expect(jsonData.data).to.have.property(\"errors\");\r",
+									"    pm.expect(jsonData.data.errors[0].message).to.eql(\"Product with id \" + productId + \" not found.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product-id}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "TC0222 - DeleteProduct_InvalidValueType_Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Invalid product ID format\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Schema validation\r",
+									"pm.test('Schema validation', () => {\r",
+									"    pm.response.to.have.jsonSchema(JSON.parse(pm.environment.get('INVALID_VALUE_TYPE_SCHEMA')));\r",
+									"});\r",
+									"\r",
+									"// Check response fields\r",
+									"pm.test(\"Check response fields\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"type\");\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"    pm.expect(jsonData).to.have.property(\"status\");\r",
+									"    pm.expect(jsonData).to.have.property(\"traceId\");\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"// Check error message\r",
+									"pm.test(\"Error message is correct\", function () {\r",
+									"    pm.expect(jsonData.errors).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData.errors.id[0]).to.eql(\"The value 'aaaa' is not valid.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/product/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "aaaa",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/product/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"product",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		}
+	]
+}

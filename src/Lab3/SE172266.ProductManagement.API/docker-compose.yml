@@ -1,0 +1,30 @@
+version: '3.4'
+
+networks: 
+    se172266_productmanagement_api:
+
+services:
+  se172266.productmanagement.api:
+    image: ${DOCKER_REGISTRY-}se172266productmanagementapi
+    build:
+      context: .
+      dockerfile: SE172266.ProductManagement.API/Dockerfile
+    ports: 
+        - 8386:443
+        - 8001:80
+    depends_on:
+        - mystoredb
+    networks: 
+        - se172266_productmanagement_api
+
+  mystoredb:
+    container_name: lab3-prn
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports: 
+        - 8002:1433
+    environment:
+        - ACCEPT_EULA=Y
+        - MSSQL_SA_PASSWORD=Bao@123456
+    networks: 
+        - se172266_productmanagement_api
+    
