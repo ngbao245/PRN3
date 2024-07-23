@@ -1,0 +1,749 @@
+{
+	"info": {
+		"_postman_id": "6b15d3db-3a5f-462a-a2ca-b74588125bad",
+		"name": "Lab2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28012459"
+	},
+	"item": [
+		{
+			"name": "TC101 - Get_NoFilter_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"// Check status code\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check that response contains @odata.context and value\r",
+							"pm.test(\"Response contains @odata.context, value\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"@odata.context\");\r",
+							"    pm.expect(jsonData).to.have.property(\"value\");\r",
+							"});\r",
+							"\r",
+							"// Check that data is an array and has 10 books\r",
+							"pm.test(\"Data is an array and has 10 books\", function () {\r",
+							"    pm.expect(jsonData.value).to.be.an(\"array\").with.length(50);\r",
+							"});\r",
+							"\r",
+							"// Check the first element of the array\r",
+							"pm.test(\"Check the first element of the array\", function () {\r",
+							"    pm.expect(jsonData.value[0]).to.eql({\r",
+							"        \"Id\": 1,\r",
+							"        \"ISBN\": \"978-3-16-148410-0\",\r",
+							"        \"Title\": \"Book Title 1\",\r",
+							"        \"Author\": \"Author 1\",\r",
+							"        \"Price\": 15.99,\r",
+							"        \"PressId\": 1,\r",
+							"        \"Location\": {\r",
+							"            \"City\": \"City A\",\r",
+							"            \"Street\": \"Street A1\"\r",
+							"        }\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// Check the fifth element of the array\r",
+							"pm.test(\"Check the fifth element of the array\", function () {\r",
+							"    pm.expect(jsonData.value[4]).to.eql({\r",
+							"        \"Id\": 5,\r",
+							"        \"ISBN\": \"978-1-250-07060-0\",\r",
+							"        \"Title\": \"Book Title 5\",\r",
+							"        \"Author\": \"Author 5\",\r",
+							"        \"Price\": 22.99,\r",
+							"        \"PressId\": 1,\r",
+							"        \"Location\": {\r",
+							"            \"City\": \"City E\",\r",
+							"            \"Street\": \"Street E1\"\r",
+							"        }\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"// Check the tenth element of the array\r",
+							"pm.test(\"Check the tenth element of the array\", function () {\r",
+							"    pm.expect(jsonData.value[9]).to.eql({\r",
+							"        \"Id\": 10,\r",
+							"        \"ISBN\": \"978-0-7432-7356-5\",\r",
+							"        \"Title\": \"Book Title 10\",\r",
+							"        \"Author\": \"Author 10\",\r",
+							"        \"Price\": 17.50,\r",
+							"        \"PressId\": 1,\r",
+							"        \"Location\": {\r",
+							"            \"City\": \"City J\",\r",
+							"            \"Street\": \"Street J1\"\r",
+							"        }\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC102 - Get_SearchByValidId_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains @odata.context, Id, ISBN, Title, Author, Price, PressId, Location\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"@odata.context\");\r",
+							"    pm.expect(jsonData).to.have.property(\"Id\");\r",
+							"    pm.expect(jsonData).to.have.property(\"ISBN\");\r",
+							"    pm.expect(jsonData).to.have.property(\"Title\");\r",
+							"    pm.expect(jsonData).to.have.property(\"Author\");\r",
+							"    pm.expect(jsonData).to.have.property(\"Price\");\r",
+							"    pm.expect(jsonData).to.have.property(\"PressId\");\r",
+							"    pm.expect(jsonData).to.have.property(\"Location\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check property values\", function () {\r",
+							"    pm.expect(jsonData[\"@odata.context\"]).to.eql(\"https://localhost:7198/odata/$metadata#Books/$entity\");\r",
+							"    pm.expect(jsonData.Id).to.eql(1);\r",
+							"    pm.expect(jsonData.ISBN).to.eql(\"978-3-16-148410-0\");\r",
+							"    pm.expect(jsonData.Title).to.eql(\"Book Title 1\");\r",
+							"    pm.expect(jsonData.Author).to.eql(\"Author 1\");\r",
+							"    pm.expect(jsonData.Price).to.eql(15.99);\r",
+							"    pm.expect(jsonData.PressId).to.eql(1);\r",
+							"\r",
+							"    pm.expect(jsonData.Location).to.have.property(\"City\");\r",
+							"    pm.expect(jsonData.Location).to.have.property(\"Street\");\r",
+							"    pm.expect(jsonData.Location.City).to.eql(\"City A\");\r",
+							"    pm.expect(jsonData.Location.Street).to.eql(\"Street A1\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books(1)",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books(1)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC103 - Get_SearchByInValidId_Error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the JSON response\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"// Test case: Check that the status code is 404\r",
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"// Test case: Verify the presence of the errors array\r",
+							"pm.test(\"Response contains errors array\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+							"    pm.expect(jsonData.errors).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"// Test case: Verify the error message\r",
+							"pm.test(\"Error message is 'Book not found.'\", function () {\r",
+							"    var errorMessage = jsonData.errors[0].message;\r",
+							"    pm.expect(errorMessage).to.eql(\"Book not found.\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books(999)",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books(999)"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC104 - Get_FilterPriceGt15_OrderByPriceDesc_Top10_Skip2_SelectLocationPrice_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"// Check status code\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check response contains @odata.context and value\r",
+							"pm.test(\"Response contains @odata.context and value\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"@odata.context\");\r",
+							"    pm.expect(jsonData).to.have.property(\"value\");\r",
+							"});\r",
+							"\r",
+							"// Check data is an array and has exactly 10 items\r",
+							"pm.test(\"Data is an array and has 10 items\", function () {\r",
+							"    pm.expect(jsonData.value).to.be.an(\"array\").with.lengthOf(10);\r",
+							"});\r",
+							"\r",
+							"// Check the first element of the array\r",
+							"pm.test(\"Check the first element of the array\", function () {\r",
+							"    var firstItem = jsonData.value[0];\r",
+							"    pm.expect(firstItem).to.have.property(\"Price\", 22.99);\r",
+							"    pm.expect(firstItem).to.have.property(\"Location\");\r",
+							"    pm.expect(firstItem.Location.City).to.eql(\"City U7\");\r",
+							"});\r",
+							"\r",
+							"// Check the fifth element of the array\r",
+							"pm.test(\"Check the fifth element of the array\", function () {\r",
+							"    var fifthItem = jsonData.value[4];\r",
+							"    pm.expect(fifthItem).to.have.property(\"Price\", 22.00);\r",
+							"    pm.expect(fifthItem).to.have.property(\"Location\");\r",
+							"    pm.expect(fifthItem.Location.City).to.eql(\"City L4\");\r",
+							"});\r",
+							"\r",
+							"// Check the tenth element of the array\r",
+							"pm.test(\"Check the tenth element of the array\", function () {\r",
+							"    var tenthItem = jsonData.value[9];\r",
+							"    pm.expect(tenthItem).to.have.property(\"Price\", 21.99);\r",
+							"    pm.expect(tenthItem).to.have.property(\"Location\");\r",
+							"    pm.expect(tenthItem.Location.City).to.eql(\"City L1\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books?$filter=Price gt 15&$orderby=Price desc&$top=10&$skip=2&$select=Location/City,Price",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "Price gt 15"
+						},
+						{
+							"key": "$orderby",
+							"value": "Price desc"
+						},
+						{
+							"key": "$top",
+							"value": "10"
+						},
+						{
+							"key": "$skip",
+							"value": "2"
+						},
+						{
+							"key": "$select",
+							"value": "Location/City,Price"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC105 - Get_GroupByCity_AvgPriceDescending_Top10_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"// Check status code\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check response is an array\r",
+							"pm.test(\"Response is an array\", function () {\r",
+							"    pm.expect(jsonData).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"// Verify array length\r",
+							"pm.test(\"Array has exactly 10 items\", function () {\r",
+							"    pm.expect(jsonData).to.have.lengthOf(10);\r",
+							"});\r",
+							"\r",
+							"// Check the first item\r",
+							"pm.test(\"First item has correct values\", function () {\r",
+							"    const firstItem = jsonData[0];\r",
+							"    pm.expect(firstItem).to.have.property(\"AvgPrice\", 22.99);\r",
+							"    pm.expect(firstItem).to.have.property(\"Location\");\r",
+							"    pm.expect(firstItem.Location).to.have.property(\"City\", \"City E\");\r",
+							"});\r",
+							"\r",
+							"// Check the fifth item\r",
+							"pm.test(\"Fifth item has correct values\", function () {\r",
+							"    const fifthItem = jsonData[4];\r",
+							"    pm.expect(fifthItem).to.have.property(\"AvgPrice\", 22.50);\r",
+							"    pm.expect(fifthItem).to.have.property(\"Location\");\r",
+							"    pm.expect(fifthItem.Location).to.have.property(\"City\", \"City U3\");\r",
+							"});\r",
+							"\r",
+							"// Check the tenth item\r",
+							"pm.test(\"Tenth item has correct values\", function () {\r",
+							"    const tenthItem = jsonData[9];\r",
+							"    pm.expect(tenthItem).to.have.property(\"AvgPrice\", 22.00);\r",
+							"    pm.expect(tenthItem).to.have.property(\"Location\");\r",
+							"    pm.expect(tenthItem.Location).to.have.property(\"City\", \"City L6\");\r",
+							"});\r",
+							"\r",
+							"// Ensure items are sorted by AvgPrice in descending order\r",
+							"pm.test(\"Items are sorted by AvgPrice in descending order\", function () {\r",
+							"    for (let i = 0; i < jsonData.length - 1; i++) {\r",
+							"        pm.expect(jsonData[i].AvgPrice).to.be.at.least(jsonData[i + 1].AvgPrice);\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books?$apply=groupby((Location/City), aggregate(Price with average as AvgPrice))&$orderby=AvgPrice desc &top=10\n",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$apply",
+							"value": "groupby((Location/City), aggregate(Price with average as AvgPrice))"
+						},
+						{
+							"key": "$orderby",
+							"value": "AvgPrice desc "
+						},
+						{
+							"key": "top",
+							"value": "10\n"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC106 - Get_FilterPriceAndTitle_ExcludeCity_OrderByPriceAndTitle_Top10_Skip5_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains @odata.context and value properties\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"@odata.context\");\r",
+							"    pm.expect(jsonData).to.have.property(\"value\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response value is an array\", function () {\r",
+							"    pm.expect(jsonData.value).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Array contains exactly 10 items\", function () {\r",
+							"    pm.expect(jsonData.value).to.have.lengthOf(10);\r",
+							"});\r",
+							"\r",
+							"// Test case: Check the first item in the array\r",
+							"pm.test(\"Check the first item\", function () {\r",
+							"    var firstItem = jsonData.value[0];\r",
+							"    pm.expect(firstItem).to.have.property(\"Title\", \"Book Title 211\");\r",
+							"    pm.expect(firstItem).to.have.property(\"Price\", 10.50);\r",
+							"    pm.expect(firstItem).to.have.property(\"Location\");\r",
+							"    pm.expect(firstItem.Location).to.have.property(\"City\", \"City K8\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Check the sixth item in the array\r",
+							"pm.test(\"Check the sixth item\", function () {\r",
+							"    var sixthItem = jsonData.value[5];\r",
+							"    pm.expect(sixthItem).to.have.property(\"Title\", \"Book Title 135\");\r",
+							"    pm.expect(sixthItem).to.have.property(\"Price\", 10.50);\r",
+							"    pm.expect(sixthItem).to.have.property(\"Location\");\r",
+							"    pm.expect(sixthItem.Location).to.have.property(\"City\", \"City I5\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Check the last item in the array\r",
+							"pm.test(\"Check the last item\", function () {\r",
+							"    var lastItem = jsonData.value[9];\r",
+							"    pm.expect(lastItem).to.have.property(\"Title\", \"Book Title 187\");\r",
+							"    pm.expect(lastItem).to.have.property(\"Price\", 10.99);\r",
+							"    pm.expect(lastItem).to.have.property(\"Location\");\r",
+							"    pm.expect(lastItem.Location).to.have.property(\"City\", \"City K7\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Check that items are sorted by Price ascending and Title descending\r",
+							"pm.test(\"Items are sorted by Price ascending and Title descending\", function () {\r",
+							"    var books = jsonData.value;\r",
+							"    for (var i = 0; i < books.length - 1; i++) {\r",
+							"        var current = books[i];\r",
+							"        var next = books[i + 1];\r",
+							"\r",
+							"        // Price should be in ascending order\r",
+							"        pm.expect(current.Price).to.be.at.most(next.Price);\r",
+							"\r",
+							"        // If Prices are equal, Title should be in descending order\r",
+							"        if (current.Price === next.Price) {\r",
+							"            pm.expect(current.Title.localeCompare(next.Title)).to.be.at.least(0);\r",
+							"        }\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books?$filter=Price gt 10 and contains(Title, 'Book') and Location/City ne 'City A' &$orderby=Price asc,Title desc &$top=10 &$skip=5& $select=Title,Price,Location/City\n",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "Price gt 10 and contains(Title, 'Book') and Location/City ne 'City A' "
+						},
+						{
+							"key": "$orderby",
+							"value": "Price asc,Title desc "
+						},
+						{
+							"key": "$top",
+							"value": "10 "
+						},
+						{
+							"key": "$skip",
+							"value": "5"
+						},
+						{
+							"key": " $select",
+							"value": "Title,Price,Location/City\n"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC107 - Get_FilterByPriceRange_AuthorContains10_ExcludeLocations_Top3_Skip6_SelectDetails_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains @odata.context and value\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"@odata.context\");\r",
+							"    pm.expect(jsonData).to.have.property(\"value\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response value is an array\", function () {\r",
+							"    pm.expect(jsonData.value).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Array contains exactly 3 items\", function () {\r",
+							"    pm.expect(jsonData.value).to.have.lengthOf(3);\r",
+							"});\r",
+							"\r",
+							"// Test case: Check the first item in the array\r",
+							"pm.test(\"Check the first item\", function () {\r",
+							"    var firstItem = jsonData.value[0];\r",
+							"    pm.expect(firstItem).to.have.property(\"Title\").to.eql(\"Book Title 109\");\r",
+							"    pm.expect(firstItem).to.have.property(\"Author\").to.eql(\"Author 109\");\r",
+							"    pm.expect(firstItem).to.have.property(\"PressId\").to.eql(1);\r",
+							"    pm.expect(firstItem).to.have.property(\"Price\").to.eql(15.50);\r",
+							"    pm.expect(firstItem).to.have.property(\"Location\");\r",
+							"    pm.expect(firstItem.Location).to.have.property(\"City\").to.eql(\"City I4\");\r",
+							"    pm.expect(firstItem.Location).to.have.property(\"Street\").to.eql(\"Street I5\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Check the last item in the array\r",
+							"pm.test(\"Check the last item\", function () {\r",
+							"    var lastItem = jsonData.value[jsonData.value.length - 1];\r",
+							"    pm.expect(lastItem).to.have.property(\"Title\").to.eql(\"Book Title 210\");\r",
+							"    pm.expect(lastItem).to.have.property(\"Author\").to.eql(\"Author 210\");\r",
+							"    pm.expect(lastItem).to.have.property(\"PressId\").to.eql(1);\r",
+							"    pm.expect(lastItem).to.have.property(\"Price\").to.eql(17.99);\r",
+							"    pm.expect(lastItem).to.have.property(\"Location\");\r",
+							"    pm.expect(lastItem.Location).to.have.property(\"City\").to.eql(\"City J8\");\r",
+							"    pm.expect(lastItem.Location).to.have.property(\"Street\").to.eql(\"Street J9\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Check a book with a specific location\r",
+							"pm.test(\"Check a book with City J4\", function () {\r",
+							"    var specificItem = jsonData.value.find(item => item.Location.City === \"City J4\");\r",
+							"    pm.expect(specificItem).to.have.property(\"Title\").to.eql(\"Book Title 110\");\r",
+							"    pm.expect(specificItem).to.have.property(\"Author\").to.eql(\"Author 110\");\r",
+							"    pm.expect(specificItem).to.have.property(\"PressId\").to.eql(1);\r",
+							"    pm.expect(specificItem).to.have.property(\"Price\").to.eql(17.00);\r",
+							"    pm.expect(specificItem).to.have.property(\"Location\");\r",
+							"    pm.expect(specificItem.Location).to.have.property(\"City\").to.eql(\"City J4\");\r",
+							"    pm.expect(specificItem.Location).to.have.property(\"Street\").to.eql(\"Street J5\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Filtering and pagination validation\r",
+							"pm.test(\"Filtering and pagination validation\", function () {\r",
+							"    jsonData.value.forEach(function (item) {\r",
+							"        pm.expect(item).to.have.property('Price');\r",
+							"        pm.expect(item.Price).to.be.within(10, 20);\r",
+							"\r",
+							"        pm.expect(item.Author).to.include('10');\r",
+							"\r",
+							"        pm.expect(item.Location.City).to.not.include('City A');\r",
+							"        pm.expect(item.Location.Street).to.not.include('Street J1');\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books?$filter=Price ge 10 and Price le 20 and contains(Author, '10') and not(contains(Location/City, 'City A') or contains(Location/Street, 'Street J1')) &select=Title,Price,PressId,Author,Location &top=3 &skip=6",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books"
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "Price ge 10 and Price le 20 and contains(Author, '10') and not(contains(Location/City, 'City A') or contains(Location/Street, 'Street J1')) "
+						},
+						{
+							"key": "select",
+							"value": "Title,Price,PressId,Author,Location "
+						},
+						{
+							"key": "top",
+							"value": "3 "
+						},
+						{
+							"key": "skip",
+							"value": "6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC108 - Get_FilterByPriceRange_AndLocationOrCity_B_AndAuthor2_OrderedByPrice_50Results_SelectDetails_Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains @odata.context and value\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"@odata.context\");\r",
+							"    pm.expect(jsonData).to.have.property(\"value\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Verify that the value is an array\r",
+							"pm.test(\"Response value is an array\", function () {\r",
+							"    pm.expect(jsonData.value).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"// Test case: Verify that the array contains at least 3 items\r",
+							"pm.test(\"Array contains at least 3 items\", function () {\r",
+							"    pm.expect(jsonData.value).to.have.lengthOf.at.least(3);\r",
+							"});\r",
+							"\r",
+							"// Test case: Check the first item in the array\r",
+							"pm.test(\"Check the first item\", function () {\r",
+							"    var firstItem = jsonData.value[0];\r",
+							"    pm.expect(firstItem).to.have.property(\"Id\").to.eql(27);\r",
+							"    pm.expect(firstItem).to.have.property(\"Title\").to.eql(\"Book Title 27\");\r",
+							"    pm.expect(firstItem).to.have.property(\"Author\").to.eql(\"Author 27\");\r",
+							"    pm.expect(firstItem).to.have.property(\"Price\").to.eql(21.50);\r",
+							"    pm.expect(firstItem).to.have.property(\"Location\");\r",
+							"    pm.expect(firstItem.Location).to.have.property(\"City\").to.eql(\"City A1\");;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check the last item\", function () {\r",
+							"    var lastItem = jsonData.value[jsonData.value.length - 1];\r",
+							"    pm.expect(lastItem).to.have.property(\"Id\").to.eql(51);\r",
+							"    pm.expect(lastItem).to.have.property(\"Title\").to.eql(\"Book Title 51\");\r",
+							"    pm.expect(lastItem).to.have.property(\"Author\").to.eql(\"Author 51\");\r",
+							"    pm.expect(lastItem).to.have.property(\"Price\").to.eql(14.99);\r",
+							"    pm.expect(lastItem).to.have.property(\"Location\");\r",
+							"    pm.expect(lastItem.Location).to.have.property(\"City\").to.eql(\"City A2\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check a random item\", function () {\r",
+							"    var randomIndex = 4;\r",
+							"    var randomItem = jsonData.value[randomIndex];\r",
+							"    pm.expect(randomItem).to.have.property(\"Id\").to.eql(2);\r",
+							"    pm.expect(randomItem).to.have.property(\"Title\").to.eql(\"Book Title 2\");\r",
+							"    pm.expect(randomItem).to.have.property(\"Author\").to.eql(\"Author 2\");\r",
+							"    pm.expect(randomItem).to.have.property(\"Price\").to.eql(20.00);\r",
+							"    pm.expect(randomItem).to.have.property(\"Location\");\r",
+							"    pm.expect(randomItem.Location).to.have.property(\"City\").to.eql(\"City B\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7198/odata/Books/?$filter=(Price ge 10 and Price le 25) and (contains(Location/City, 'A') or (Location/City eq 'City B' and Author eq 'Author 2'))&$orderby=Price desc &$skip=0 &$top=50 &$select=Id,Title,Author,Price,Location/City\n",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7198",
+					"path": [
+						"odata",
+						"Books",
+						""
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "(Price ge 10 and Price le 25) and (contains(Location/City, 'A') or (Location/City eq 'City B' and Author eq 'Author 2'))"
+						},
+						{
+							"key": "$orderby",
+							"value": "Price desc "
+						},
+						{
+							"key": "$skip",
+							"value": "0 "
+						},
+						{
+							"key": "$top",
+							"value": "50 "
+						},
+						{
+							"key": "$select",
+							"value": "Id,Title,Author,Price,Location/City\n"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

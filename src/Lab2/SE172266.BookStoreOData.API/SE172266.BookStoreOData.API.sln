@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SE172266.BookStoreOData.API", "SE172266.BookStoreOData.API\SE172266.BookStoreOData.API.csproj", "{7F9119DC-F494-405E-8B61-6D1CEAE3ABAE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SE172266.ProductManagement.Repo", "..\..\Lab1\SE172266.ProductManagement.API\SE172266.ProductManagement.Repo\SE172266.ProductManagement.Repo.csproj", "{F0431030-E14E-47E7-9454-2F3C00F38FCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7F9119DC-F494-405E-8B61-6D1CEAE3ABAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F9119DC-F494-405E-8B61-6D1CEAE3ABAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F9119DC-F494-405E-8B61-6D1CEAE3ABAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0431030-E14E-47E7-9454-2F3C00F38FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0431030-E14E-47E7-9454-2F3C00F38FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0431030-E14E-47E7-9454-2F3C00F38FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0431030-E14E-47E7-9454-2F3C00F38FCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
